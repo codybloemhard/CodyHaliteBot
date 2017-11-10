@@ -5,9 +5,9 @@
 #ifndef MYBOT_INFORMATION_H
 #define MYBOT_INFORMATION_H
 
-#include "hlt/entities.hpp"
-#include "hlt/map.hpp"
-#include "hlt/types.hpp"
+#include "../hlt/entities.hpp"
+#include "../hlt/map.hpp"
+#include "../hlt/types.hpp"
 
 namespace bot {
     class Information {
@@ -24,6 +24,7 @@ namespace bot {
         void EndCycle();
         hlt::Planet ClosestPlanet(std::vector<hlt::Planet>&, hlt::Vector);
         hlt::Planet OptimalPlanet(std::vector<hlt::Planet>&, hlt::Vector);
+        hlt::Planet BiggestPlanet(std::vector<hlt::Planet>&);
         int GetRound();
         hlt::PlayerId GetPlayerID();
     };

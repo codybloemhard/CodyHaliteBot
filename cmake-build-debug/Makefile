@@ -150,6 +150,33 @@ MyBot.cpp.s:
 	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/MyBot.cpp.s
 .PHONY : MyBot.cpp.s
 
+bot/GamePlan.o: bot/GamePlan.cpp.o
+
+.PHONY : bot/GamePlan.o
+
+# target to build an object file
+bot/GamePlan.cpp.o:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/GamePlan.cpp.o
+.PHONY : bot/GamePlan.cpp.o
+
+bot/GamePlan.i: bot/GamePlan.cpp.i
+
+.PHONY : bot/GamePlan.i
+
+# target to preprocess a source file
+bot/GamePlan.cpp.i:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/GamePlan.cpp.i
+.PHONY : bot/GamePlan.cpp.i
+
+bot/GamePlan.s: bot/GamePlan.cpp.s
+
+.PHONY : bot/GamePlan.s
+
+# target to generate assembly for a file
+bot/GamePlan.cpp.s:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/GamePlan.cpp.s
+.PHONY : bot/GamePlan.cpp.s
+
 bot/Information.o: bot/Information.cpp.o
 
 .PHONY : bot/Information.o
@@ -270,6 +297,9 @@ help:
 	@echo "... MyBot.o"
 	@echo "... MyBot.i"
 	@echo "... MyBot.s"
+	@echo "... bot/GamePlan.o"
+	@echo "... bot/GamePlan.i"
+	@echo "... bot/GamePlan.s"
 	@echo "... bot/Information.o"
 	@echo "... bot/Information.i"
 	@echo "... bot/Information.s"

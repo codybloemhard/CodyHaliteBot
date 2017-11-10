@@ -53,6 +53,18 @@ namespace bot{
         }
         return maxp;
     }
+    hlt::Planet Information::BiggestPlanet(std::vector<hlt::Planet>& source) {
+        double max = 0;
+        hlt::Planet maxp;
+        for(const auto &planet : source){
+            double size = planet.radius;
+            if(size > max){
+                max = size;
+                maxp = planet;
+            }
+        }
+        return maxp;
+    }
     int Information::GetRound() { return round; }
     hlt::PlayerId Information::GetPlayerID() { return id; }
 }

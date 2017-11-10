@@ -4,15 +4,16 @@
 #ifndef MYBOT_BOTALGO_H
 #define MYBOT_BOTALGO_H
 
-#include "hlt/hlt.hpp"
-#include "hlt/types.hpp"
-#include "hlt/navigation.hpp"
+#include "../hlt/types.hpp"
+#include "../hlt/navigation.hpp"
 #include "Information.h"
+#include "GamePlan.h"
 
 namespace bot{
     class BotAlgo{
     private:
         Information info;
+        GamePlan plan;
         std::unordered_map<unsigned int, hlt::Vector> prevShipPos, shipSpeeds;
         void RecordShipSpeed(const hlt::Map& map){
             for(const auto &pair : map.ships){
@@ -27,16 +28,31 @@ namespace bot{
             }
         }
     public:
-        BotAlgo(hlt::PlayerId id) : info(Information(id)){
+        BotAlgo(hlt::PlayerId id) : info(Information(id)), plan(GamePlan()){
         }
         void Moves(hlt::Map& map, std::vector<hlt::Move>& moves){
             info.SortPlanets(map);
             RecordShipSpeed(map);
+
+            hlt::Planet globalTarget;
+            if(plan.GetStage() == STAGE::CONQUER){
+                globalTarget = info.BiggestPlanet(info.enemyPlanets);
+            }
             for(const auto ship : map.ships.at(info.GetPlayerID())){
                 if(ship.docking_status == hlt::ShipDockingStatus::Docking) continue;
-                hlt::Planet target = info.OptimalPlanet(info.emptyPlanets, ship.pos);
-                if(target.pos == hlt::Vector(0,0)) target = info.ClosestPlanet(info.notfullPlanets, ship.pos);
-                if(target.pos == hlt::Vector(0,0)) target = info.ClosestPlanet(info.enemyPlanets, ship.pos);
+                hlt::Planet target;
+                if(plan.GetStage() == STAGE::START){
+                    target = info.OptimalPlanet(info.emptyPlanets, ship.pos);
+                }
+                else if(plan.GetStage() == STAGE::SETTLE){
+                    target = info.OptimalPlanet(info.notfullPlanets, ship.pos);
+                }
+                else if(plan.GetStage() == STAGE::CONQUER){
+                    target = info.OptimalPlanet(info.emptyPlanets, ship.pos);
+                    if(target.pos == hlt::Vector(0,0)) target = info.OptimalPlanet(info.notfullPlanets, ship.pos);
+                    if(target.pos == hlt::Vector(0,0)) target = globalTarget;
+                }
+
                 if(ship.can_dock(target)){
                     moves.push_back(hlt::Move::dock(ship.entity_id, target.entity_id));
                     continue;
@@ -45,6 +61,7 @@ namespace bot{
                 if(move.second) moves.push_back(move.first);
             }
             info.EndCycle();
+            plan.Step(map, info);
         }
     };
 }
