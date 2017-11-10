@@ -42,7 +42,7 @@ namespace bot{
         round++;
     }
     hlt::Ship Information::ShipOnPlanet(hlt::Planet& planet) {
-        if(enemys.size() > 0) return enemys[planet.entity_id][0];
+        if(enemys[planet.entity_id].size() > 0) return enemys[planet.entity_id][0];
         else return hlt::Ship();
     }
     hlt::Planet Information::ClosestPlanet(std::vector<hlt::Planet>& source, hlt::Vector pos){
