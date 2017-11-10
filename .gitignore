@@ -301,3 +301,13 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.exe
+*.make
+*.cmake
+*.bin
+*.cxx
+*.includecache
+*.o
+*.marks
+*.cbp
+*.c

@@ -1,0 +1,3 @@
+/cygdrive/c/Users/Cody/Desktop/_GITHUB_/AI/MyBot/CodyHaliteBot/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/c/Users/Cody/Desktop/_GITHUB_/AI/MyBot/CodyHaliteBot/cmake-build-debug/CMakeFiles/edit_cache.dir
+/cygdrive/c/Users/Cody/Desktop/_GITHUB_/AI/MyBot/CodyHaliteBot/cmake-build-debug/CMakeFiles/MyBot.dir
