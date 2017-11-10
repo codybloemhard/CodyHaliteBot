@@ -32,33 +32,44 @@ namespace bot{
         }
         void Moves(hlt::Map& map, std::vector<hlt::Move>& moves){
             info.SortPlanets(map);
+            info.SortEnemyShips(map);
             RecordShipSpeed(map);
 
-            hlt::Planet globalTarget;
-            if(plan.GetStage() == STAGE::CONQUER){
-                globalTarget = info.BiggestPlanet(info.enemyPlanets);
-            }
             for(const auto ship : map.ships.at(info.GetPlayerID())){
                 if(ship.docking_status == hlt::ShipDockingStatus::Docking) continue;
-                hlt::Planet target;
+                hlt::Planet targetP;
+                hlt::Ship targetS;
                 if(plan.GetStage() == STAGE::START){
-                    target = info.OptimalPlanet(info.emptyPlanets, ship.pos);
+                    targetP = info.OptimalPlanet(info.emptyPlanets, ship.pos);
                 }
                 else if(plan.GetStage() == STAGE::SETTLE){
-                    target = info.OptimalPlanet(info.notfullPlanets, ship.pos);
+                    targetP = info.OptimalPlanet(info.notfullPlanets, ship.pos);
                 }
                 else if(plan.GetStage() == STAGE::CONQUER){
-                    target = info.OptimalPlanet(info.emptyPlanets, ship.pos);
-                    if(target.pos == hlt::Vector(0,0)) target = info.OptimalPlanet(info.notfullPlanets, ship.pos);
-                    if(target.pos == hlt::Vector(0,0)) target = globalTarget;
+                    targetP = info.OptimalPlanet(info.emptyPlanets, ship.pos);
+                    if(targetP.pos == hlt::Vector(0,0)) targetP = info.OptimalPlanet(info.notfullPlanets, ship.pos);
+                    if(targetP.pos == hlt::Vector(0,0)) {
+                        targetP = info.OptimalPlanet(info.enemyPlanets, ship.pos);
+                        for (const auto &player : map.ships) {
+                            targetS = info.ShipOnPlanet(targetP);
+                            break;
+                        }
+                    }
                 }
 
-                if(ship.can_dock(target)){
-                    moves.push_back(hlt::Move::dock(ship.entity_id, target.entity_id));
+
+                if(!(targetS.pos == hlt::Vector(0,0))){
+                    hlt::nullable<hlt::Move> m = hlt::navigation::navigate_ship_towards_target(map, ship, targetS.pos, 7, true, hlt::constants::MAX_NAVIGATION_CORRECTIONS, M_PI/180);
+                    if(m.second)moves.push_back(m.first);
+                }
+                else if(ship.can_dock(targetP)){
+                    moves.push_back(hlt::Move::dock(ship.entity_id, targetP.entity_id));
                     continue;
                 }
-                const hlt::nullable<hlt::Move> move = hlt::navigation::navigate_ship_to_dock(map, ship, target, 7);
-                if(move.second) moves.push_back(move.first);
+                else {
+                    const hlt::nullable<hlt::Move> move = hlt::navigation::navigate_ship_to_dock(map, ship, targetP, 7);
+                    if (move.second) moves.push_back(move.first);
+                }
             }
             info.EndCycle();
             plan.Step(map, info);

@@ -5,6 +5,10 @@
 #include "Information.h"
 
 namespace bot{
+    Information::Information(hlt::PlayerId id) {
+        this->id = id;
+        round = 0;
+    }
     void Information::SortPlanets(const hlt::Map& map){
         emptyPlanets.clear();
         ourPlanets.clear();
@@ -22,8 +26,24 @@ namespace bot{
                 enemyPlanets.push_back(planet);
         }
     }
+    void Information::SortEnemyShips(const hlt::Map& map) {
+        for(const auto& player : map.ships){
+            if(player.first == id) continue;
+            for(const auto& planet : map.planets){
+                enemys[planet.entity_id].clear();
+                for(const auto& ship : player.second){
+                    double dist = (planet.pos - ship.pos).length();
+                    if(dist < 10) enemys[planet.entity_id].push_back(ship);
+                }
+            }
+        }
+    }
     void Information::EndCycle() {
         round++;
+    }
+    hlt::Ship Information::ShipOnPlanet(hlt::Planet& planet) {
+        if(enemys.size() > 0) return enemys[planet.entity_id][0];
+        else return hlt::Ship();
     }
     hlt::Planet Information::ClosestPlanet(std::vector<hlt::Planet>& source, hlt::Vector pos){
         double min = 100000000;
