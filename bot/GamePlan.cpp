@@ -9,7 +9,7 @@ namespace bot{
         return stage;
     }
 
-    void GamePlan::Step(hlt::Map &map, Information &info) {
+    void GamePlan::Step(Information &info) {
         if(info.ourPlanets.size() >= 3 && stage == STAGE::START)
             stage = STAGE::SETTLE;
         if(info.notfullPlanets.size() == 0 && stage == STAGE::SETTLE)

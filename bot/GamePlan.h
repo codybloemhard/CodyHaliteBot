@@ -18,7 +18,7 @@ namespace bot {
         STAGE stage;
     public:
         STAGE GetStage();
-        void Step(hlt::Map&, Information&);
+        void Step(Information&);
     };
 }
 #endif //MYBOT_GAMEPLAN_H

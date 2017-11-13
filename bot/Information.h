@@ -15,18 +15,25 @@ namespace bot {
         hlt::PlayerId id;
         int round;
         std::unordered_map<unsigned int, std::vector<hlt::Ship>> enemys;
+        std::unordered_map<unsigned int, hlt::Vector> prevShipPos, shipSpeeds;
     public:
-        std::vector<hlt::Planet> emptyPlanets, ourPlanets, enemyPlanets, notfullPlanets;
+        std::vector<hlt::Planet> allPlanets, emptyPlanets, ourPlanets, enemyPlanets, notfullPlanets;
+    public:
         Information(hlt::PlayerId id);
         void SortPlanets(const hlt::Map&);
         void SortEnemyShips(const hlt::Map&);
+        void RecordShipSpeed(const hlt::Map&);
         void EndCycle();
         hlt::Ship ShipOnPlanet(hlt::Planet&);
         hlt::Planet ClosestPlanet(std::vector<hlt::Planet>&, hlt::Vector);
         hlt::Planet OptimalPlanet(std::vector<hlt::Planet>&, hlt::Vector);
+        hlt::Planet OptimalPlanet(hlt::Vector, hlt::Planet&, hlt::Planet&, double, double);
         hlt::Planet BiggestPlanet(std::vector<hlt::Planet>&);
         int GetRound();
         hlt::PlayerId GetPlayerID();
+        bool IsNull(const hlt::Entity& e) const{
+            return e.pos == hlt::Vector(0,0);
+        }
     };
 }
 

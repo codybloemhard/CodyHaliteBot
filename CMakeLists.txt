@@ -23,6 +23,6 @@ foreach (dir ${dirs})
 endforeach ()
 
 include_directories(${CMAKE_SOURCE_DIR})
-set(SOURCE_FILES "${SOURCE_FILES}" MyBot.cpp bot/Information.cpp bot/Information.h bot/GamePlan.cpp bot/GamePlan.h)
+set(SOURCE_FILES "${SOURCE_FILES}" MyBot.cpp bot/Information.cpp bot/Information.h bot/GamePlan.cpp bot/GamePlan.h bot/Commander.cpp bot/Commander.h bot/ShipControl.h bot/ShipControl.cpp)
 
 add_executable(MyBot ${SOURCE_FILES})

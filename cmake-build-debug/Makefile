@@ -150,6 +150,33 @@ MyBot.cpp.s:
 	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/MyBot.cpp.s
 .PHONY : MyBot.cpp.s
 
+bot/Commander.o: bot/Commander.cpp.o
+
+.PHONY : bot/Commander.o
+
+# target to build an object file
+bot/Commander.cpp.o:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/Commander.cpp.o
+.PHONY : bot/Commander.cpp.o
+
+bot/Commander.i: bot/Commander.cpp.i
+
+.PHONY : bot/Commander.i
+
+# target to preprocess a source file
+bot/Commander.cpp.i:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/Commander.cpp.i
+.PHONY : bot/Commander.cpp.i
+
+bot/Commander.s: bot/Commander.cpp.s
+
+.PHONY : bot/Commander.s
+
+# target to generate assembly for a file
+bot/Commander.cpp.s:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/Commander.cpp.s
+.PHONY : bot/Commander.cpp.s
+
 bot/GamePlan.o: bot/GamePlan.cpp.o
 
 .PHONY : bot/GamePlan.o
@@ -203,6 +230,33 @@ bot/Information.s: bot/Information.cpp.s
 bot/Information.cpp.s:
 	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/Information.cpp.s
 .PHONY : bot/Information.cpp.s
+
+bot/ShipControl.o: bot/ShipControl.cpp.o
+
+.PHONY : bot/ShipControl.o
+
+# target to build an object file
+bot/ShipControl.cpp.o:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/ShipControl.cpp.o
+.PHONY : bot/ShipControl.cpp.o
+
+bot/ShipControl.i: bot/ShipControl.cpp.i
+
+.PHONY : bot/ShipControl.i
+
+# target to preprocess a source file
+bot/ShipControl.cpp.i:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/ShipControl.cpp.i
+.PHONY : bot/ShipControl.cpp.i
+
+bot/ShipControl.s: bot/ShipControl.cpp.s
+
+.PHONY : bot/ShipControl.s
+
+# target to generate assembly for a file
+bot/ShipControl.cpp.s:
+	$(MAKE) -f CMakeFiles/MyBot.dir/build.make CMakeFiles/MyBot.dir/bot/ShipControl.cpp.s
+.PHONY : bot/ShipControl.cpp.s
 
 hlt/hlt_in.o: hlt/hlt_in.cpp.o
 
@@ -297,12 +351,18 @@ help:
 	@echo "... MyBot.o"
 	@echo "... MyBot.i"
 	@echo "... MyBot.s"
+	@echo "... bot/Commander.o"
+	@echo "... bot/Commander.i"
+	@echo "... bot/Commander.s"
 	@echo "... bot/GamePlan.o"
 	@echo "... bot/GamePlan.i"
 	@echo "... bot/GamePlan.s"
 	@echo "... bot/Information.o"
 	@echo "... bot/Information.i"
 	@echo "... bot/Information.s"
+	@echo "... bot/ShipControl.o"
+	@echo "... bot/ShipControl.i"
+	@echo "... bot/ShipControl.s"
 	@echo "... hlt/hlt_in.o"
 	@echo "... hlt/hlt_in.i"
 	@echo "... hlt/hlt_in.s"
