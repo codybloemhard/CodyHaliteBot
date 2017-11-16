@@ -10,7 +10,7 @@
 
 namespace bot {
     enum STAGE {
-        START, SETTLE, CONQUER,
+        START, SETTLE, CONQUER, DESTROY
     };
 
     class GamePlan {
@@ -18,7 +18,7 @@ namespace bot {
         STAGE stage;
     public:
         STAGE GetStage();
-        void Step(Information&);
+        void Step(hlt::Map&, Information&);
     };
 }
 #endif //MYBOT_GAMEPLAN_H

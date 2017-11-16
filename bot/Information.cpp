@@ -29,13 +29,20 @@ namespace bot{
         }
     }
     void Information::SortEnemyShips(const hlt::Map& map) {
+        enemys.clear();
+        for(const auto& player : map.ships) {
+            if (player.first == id) continue;
+            for (const auto &ship : player.second) {
+                enemys.push_back(ship);
+            }
+        }
         for(const auto& planet : map.planets){
-            enemys[planet.entity_id].clear();
+            enemysOnPlanet[planet.entity_id].clear();
             for(const auto& player : map.ships) {
                 if(player.first == id) continue;
                 for (const auto &ship : player.second) {
                     if (ship.docking_status != hlt::ShipDockingStatus::Undocked && ship.docked_planet == planet.entity_id)
-                        enemys[planet.entity_id].push_back(ship);
+                        enemysOnPlanet[planet.entity_id].push_back(ship);
                 }
             }
         }
@@ -56,9 +63,26 @@ namespace bot{
         round++;
     }
     hlt::Ship Information::ShipOnPlanet(hlt::Planet& planet) {
-        if(enemys[planet.entity_id].size() == 1) return enemys[planet.entity_id][0];
-        if(enemys[planet.entity_id].size() > 1) return enemys[planet.entity_id][rand() % (enemys[planet.entity_id].size() - 1)];
+        if(enemysOnPlanet[planet.entity_id].size() == 1) return enemysOnPlanet[planet.entity_id][0];
+        if(enemysOnPlanet[planet.entity_id].size() > 1) return enemysOnPlanet[planet.entity_id][rand() % (enemysOnPlanet[planet.entity_id].size() - 1)];
         else return hlt::Ship();
+    }
+    hlt::Ship Information::ClosestEnemy(hlt::Vector pos) {
+        if(enemys.size() == 0) return hlt::Ship();
+        if(enemys.size() == 1){
+            if(enemys[0].docking_status == hlt::ShipDockingStatus::Undocked) return hlt::Ship();
+            else return enemys[0];
+        }
+        double min = 100000;
+        hlt::Ship mins = hlt::Ship();
+        for(const auto& ship : enemys){
+            double dist = ship.pos.dist(pos);
+            if(dist < min){
+                min = dist;
+                mins = ship;
+            }
+        }
+        return mins;
     }
     hlt::Planet Information::ClosestPlanet(std::vector<hlt::Planet>& source, hlt::Vector pos){
         double min = 100000000;
@@ -73,20 +97,28 @@ namespace bot{
         }
         return minp;
     }
-    hlt::Planet Information::OptimalPlanet(std::vector<hlt::Planet>& source, hlt::Vector pos) {
-        double max = 0;
-        hlt::Planet maxp;
-        for(const auto &planet : source){
-            hlt::Vector diff = planet.pos - pos;
-            double len = diff.length();
-            double size = planet.docking_spots;
-            double cost = 2 * size / len;
-            if(cost > max){
-                max = cost;
-                maxp = planet;
+    void Information::OptimalPlanet(std::vector<hlt::Planet>& dest, std::vector<hlt::Planet>& source, hlt::Vector pos, unsigned int size) {
+        std::vector<double> max;
+        std::vector<hlt::Planet> maxp;
+        for(int i = 0; i < size; i++){
+            max.push_back(0);
+            maxp.push_back(hlt::Planet());
+        }
+        for(const auto& planet : source){
+            double len = pos.dist(planet.pos);
+            double rad = planet.docking_spots;
+            double cost = rad * rad / len;
+            for(int i = 0; i < size; i++){
+                if(cost > max[i]){
+                    max[i] = cost;
+                    maxp[i] = planet;
+                    break;
+                }
             }
         }
-        return maxp;
+        for(auto& planet : maxp)
+            if(!IsNull(planet))
+                dest.push_back(planet);
     }
     hlt::Planet Information::OptimalPlanet(hlt::Vector pos, hlt::Planet& planetA, hlt::Planet& planetB, double scalarA, double scalarB) {
         if(IsNull(planetA)) return planetB;
@@ -106,6 +138,27 @@ namespace bot{
             }
         }
         return maxp;
+    }
+    double Information::PowerPart(hlt::Map& map) {
+        double our = 0, enemy = 0;
+        for(const auto& planet : map.planets){
+            if(planet.owner_id == id) our += planet.radius;
+            else enemy += planet.radius;
+        }
+        return our / (our + enemy);
+    }
+    hlt::Vector Information::CenterOfGravity(std::vector<hlt::Planet> dudes){
+        hlt::Vector endpos;
+        for(const auto& ding : dudes)
+            endpos = endpos + ding.pos;
+        endpos = endpos / dudes.size();
+        return endpos;
+    }
+    hlt::Planet Information::PickRandom(std::vector<hlt::Planet>& planets){
+        int max = planets.size() - 1;
+        if(max < 0) return hlt::Planet();
+        int r = rand() % max;
+        return planets[r];
     }
     int Information::GetRound() { return round; }
     hlt::PlayerId Information::GetPlayerID() { return id; }

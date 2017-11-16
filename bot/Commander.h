@@ -12,24 +12,30 @@
 #include <utility>
 
 namespace bot {
-    enum TASKTYPE { NOOP, CAPTURE, AID, KILL };
+    enum TASKTYPE { NOOP, CAPTURE, AID, KILL, SNIPE, CRASH };
     struct Task{
     public:
-        unsigned int active = 0;
+        int active = 0;
         TASKTYPE type = NOOP;
         hlt::Ship ship;
-        Task() : active(0), type(TASKTYPE::NOOP), ship(hlt::Ship()){}
-        Task(unsigned int act, TASKTYPE typ, const hlt::Ship& shi) : active(act), type(typ), ship(shi){}
+        hlt::Planet target;
+        Task() : active(0), type(TASKTYPE::NOOP), ship(hlt::Ship()), target(hlt::Planet()){}
+        Task(int act, TASKTYPE typ) : active(act), type(typ){
+            target = hlt::Planet();
+        }
     };
     class Commander {
     private:
-        hlt::Planet globalTarget;
         std::unordered_map<unsigned int, Task> available;
+        std::vector<Task> tasks;
     private:
         void ControlShips(hlt::Map&, std::vector<hlt::Move>&, Information&);
-        void CommandShip(const hlt::Ship&, TASKTYPE);
+        void CommandShip(hlt::Ship&, Task);
         bool ControlDocking(const hlt::Ship&, Information&, std::vector<hlt::Move>&);
-        void FreeShip(const unsigned int);
+        void FreeShip(unsigned int);
+        void GenerateTasks(hlt::Map&, Information&, GamePlan&);
+        void DelegateTasks(Information&, GamePlan&);
+        void UpdateShips(hlt::Map&, hlt::PlayerId);
     public:
         void Command(hlt::Map&, std::vector<hlt::Move>&, Information&, GamePlan&);
     };

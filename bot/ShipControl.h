@@ -13,6 +13,7 @@ namespace bot{
     bool IsDocking(const hlt::Ship& ship);
     bool FlyToDock(const hlt::Ship& ship, const hlt::Planet& planet, std::vector<hlt::Move>& moves);
     bool FlyToPlanet(const hlt::Map& map, const hlt::Ship& ship, const hlt::Planet& planet, std::vector<hlt::Move>& moves);
+    bool FlyToPlanetRandom(const hlt::Map& map, const hlt::Ship& ship, const hlt::Planet& planet, std::vector<hlt::Move>& moves);
     bool FlyToShip(const hlt::Map& map, const hlt::Ship& ship, const hlt::Ship& target, std::vector<hlt::Move>& moves);
     bool FlyToSuicide(const hlt::Map& map, const hlt::Ship& ship, const hlt::Planet& target, std::vector<hlt::Move>& moves);
 }

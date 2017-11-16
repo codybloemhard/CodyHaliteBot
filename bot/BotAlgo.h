@@ -24,7 +24,7 @@ namespace bot{
             info.RecordShipSpeed(map);
             commander.Command(map, moves, info, plan);
             info.EndCycle();
-            plan.Step(info);
+            plan.Step(map, info);
         }
     };
 }
