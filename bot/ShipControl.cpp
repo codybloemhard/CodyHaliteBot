@@ -38,6 +38,7 @@ namespace bot{
         return true;
     }
     bool FlyToShip(const hlt::Map& map, const hlt::Ship& ship, const hlt::Ship& target, std::vector<hlt::Move>& moves){
+        if(ship.pos.dist(target.pos) < hlt::constants::WEAPON_RADIUS) return true;
         hlt::nullable<hlt::Move> m = hlt::navigation::navigate_ship_towards_target(map, ship, target.pos, 7, true, hlt::constants::MAX_NAVIGATION_CORRECTIONS, M_PI/180);
         if(m.second) {
             moves.push_back(m.first);

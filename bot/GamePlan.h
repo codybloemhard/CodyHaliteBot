@@ -10,13 +10,15 @@
 
 namespace bot {
     enum STAGE {
-        START, SETTLE, CONQUER, DESTROY
+        START, CONQUER, DESTROY
     };
 
     class GamePlan {
     private:
         STAGE stage;
+        bool didChange;
     public:
+        bool DidChange();
         STAGE GetStage();
         void Step(hlt::Map&, Information&);
     };

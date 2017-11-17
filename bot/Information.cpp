@@ -30,6 +30,7 @@ namespace bot{
     }
     void Information::SortEnemyShips(const hlt::Map& map) {
         enemys.clear();
+        dockedEnemys.clear();
         for(const auto& player : map.ships) {
             if (player.first == id) continue;
             for (const auto &ship : player.second) {
@@ -41,8 +42,10 @@ namespace bot{
             for(const auto& player : map.ships) {
                 if(player.first == id) continue;
                 for (const auto &ship : player.second) {
-                    if (ship.docking_status != hlt::ShipDockingStatus::Undocked && ship.docked_planet == planet.entity_id)
+                    if (ship.docking_status != hlt::ShipDockingStatus::Undocked && ship.docked_planet == planet.entity_id) {
                         enemysOnPlanet[planet.entity_id].push_back(ship);
+                        dockedEnemys.push_back(ship);
+                    }
                 }
             }
         }
@@ -76,6 +79,23 @@ namespace bot{
         double min = 100000;
         hlt::Ship mins = hlt::Ship();
         for(const auto& ship : enemys){
+            double dist = ship.pos.dist(pos);
+            if(dist < min){
+                min = dist;
+                mins = ship;
+            }
+        }
+        return mins;
+    }
+    hlt::Ship Information::ClosestEnemyOnPlanet(hlt::Vector pos) {
+        if(dockedEnemys.size() == 0) return hlt::Ship();
+        if(dockedEnemys.size() == 1){
+            if(dockedEnemys[0].docking_status == hlt::ShipDockingStatus::Undocked) return hlt::Ship();
+            else return dockedEnemys[0];
+        }
+        double min = 100000;
+        hlt::Ship mins = hlt::Ship();
+        for(const auto& ship : dockedEnemys){
             double dist = ship.pos.dist(pos);
             if(dist < min){
                 min = dist;
@@ -154,12 +174,29 @@ namespace bot{
         endpos = endpos / dudes.size();
         return endpos;
     }
+    hlt::Vector Information::CenterOfGravity(std::vector<hlt::Ship> dudes){
+        hlt::Vector endpos;
+        for(const auto& ding : dudes)
+            endpos = endpos + ding.pos;
+        endpos = endpos / dudes.size();
+        return endpos;
+    }
     hlt::Planet Information::PickRandom(std::vector<hlt::Planet>& planets){
-        int max = planets.size() - 1;
+        if(planets.empty()) return hlt::Planet();
+        unsigned long int max = planets.size() - 1;
         if(max < 0) return hlt::Planet();
-        int r = rand() % max;
+        if(max == 0) return planets[0];
+        unsigned long int r = rand() % max;
         return planets[r];
+    }
+    unsigned int Information::PlayersInRoom(const hlt::Map& map){
+        unsigned int count = 0;
+        for(const auto& player : map.ships){
+            count++;
+        }
+        return count;
     }
     int Information::GetRound() { return round; }
     hlt::PlayerId Information::GetPlayerID() { return id; }
+    bool Information::IsNull(const hlt::Entity& e) const{ return e.pos == hlt::Vector(0,0); }
 }

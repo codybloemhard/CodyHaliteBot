@@ -28,6 +28,7 @@ namespace bot {
     private:
         std::unordered_map<unsigned int, Task> available;
         std::vector<Task> tasks;
+        unsigned int round = 0;
     private:
         void ControlShips(hlt::Map&, std::vector<hlt::Move>&, Information&);
         void CommandShip(hlt::Ship&, Task);
